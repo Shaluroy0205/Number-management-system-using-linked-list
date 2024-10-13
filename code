@@ -1,0 +1,153 @@
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* next;
+};
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = new Node();
+    newNode->data = data;
+    newNode->next = nullptr;
+    return newNode;
+}
+
+// Class for Number Management System
+class NumberManagementSystem {
+private:
+    Node* head;
+
+public:
+    NumberManagementSystem() : head(nullptr) {}
+
+    // Insert a number into the linked list
+    void insert(int data) {
+        Node* newNode = createNode(data);
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+        cout << "Inserted: " << data << endl;
+    }
+
+    // Delete a number from the linked list
+    void remove(int data) {
+        if (!head) {
+            cout << "List is empty!" << endl;
+            return;
+        }
+        if (head->data == data) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            cout << "Deleted: " << data << endl;
+            return;
+        }
+        Node* current = head;
+        Node* prev = nullptr;
+        while (current && current->data != data) {
+            prev = current;
+            current = current->next;
+        }
+        if (current) {
+            prev->next = current->next;
+            delete current;
+            cout << "Deleted: " << data << endl;
+        } else {
+            cout << "Number " << data << " not found!" << endl;
+        }
+    }
+
+    // Search for a number in the linked list
+    bool search(int data) {
+        Node* current = head;
+        while (current) {
+            if (current->data == data) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    // Display the linked list
+    void display() {
+        if (!head) {
+            cout << "List is empty!" << endl;
+            return;
+        }
+        Node* current = head;
+        cout << "Numbers in the list: ";
+        while (current) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+
+    // Destructor to free memory
+    ~NumberManagementSystem() {
+        Node* current = head;
+        while (current) {
+            Node* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+};
+
+int main() {
+    NumberManagementSystem nms;
+    int choice, number;
+
+    do {
+        cout << "\nNumber Management System Menu:\n";
+        cout << "1. Insert\n";
+        cout << "2. Delete\n";
+        cout << "3. Search\n";
+        cout << "4. Display\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter a number to insert: ";
+                cin >> number;
+                nms.insert(number);
+                break;
+            case 2:
+                cout << "Enter a number to delete: ";
+                cin >> number;
+                nms.remove(number);
+                break;
+            case 3:
+                cout << "Enter a number to search: ";
+                cin >> number;
+                if (nms.search(number)) {
+                    cout << number << " found in the list." << endl;
+                } else {
+                    cout << number << " not found in the list." << endl;
+                }
+                break;
+            case 4:
+                nms.display();
+                break;
+            case 5:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
